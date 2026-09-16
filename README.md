@@ -89,6 +89,22 @@ Tambien puede ejecutarse el JAR generado:
 java -jar target/social-notifications-service-0.0.1-SNAPSHOT.jar
 ```
 
+El perfil por defecto no requiere Kafka ni PostgreSQL.
+
+Para iniciar con infraestructura Kafka/PostgreSQL habilitada:
+
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=kafka
+```
+
+Tambien puede activarse el perfil sobre el JAR generado:
+
+```bash
+java -jar target/social-notifications-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=kafka
+```
+
+El perfil `kafka` requiere las variables documentadas en `.env.example` y servicios externos disponibles.
+
 ## Configuracion
 
 Las variables de entorno necesarias se documentan mediante `.env.example`.
