@@ -24,3 +24,6 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.swp
+
+# Local archives
+kafka-4.3.1-src.tgz
