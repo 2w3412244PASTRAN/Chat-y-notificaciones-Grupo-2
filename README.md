@@ -105,6 +105,38 @@ java -jar target/social-notifications-service-0.0.1-SNAPSHOT.jar --spring.profil
 
 El perfil `kafka` requiere las variables documentadas en `.env.example` y servicios externos disponibles.
 
+## Infraestructura Local
+
+Para levantar PostgreSQL y Kafka localmente:
+
+```bash
+docker compose up -d
+```
+
+Luego iniciar la aplicacion con el perfil de infraestructura:
+
+```bash
+java -jar target/social-notifications-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=kafka
+```
+
+Para probar el publicador outbox, insertar un evento pendiente:
+
+```bash
+docker exec -i social-notifications-postgres psql -U social_notifications -d social_notifications -c "INSERT INTO outbox_event (outbox_id, event_id, event_type, aggregate_type, aggregate_id, topic_destino, message_key, payload, status, intentos, created_at) VALUES ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000002', 'TestEvent', 'test', 'test-1', 'notification-events', 'test-1', 'hello-world', 'PENDIENTE', 0, now());"
+```
+
+Consumir el mensaje publicado en Kafka:
+
+```bash
+docker exec -it social-notifications-kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic notification-events --from-beginning --timeout-ms 10000
+```
+
+Verificar que el evento quedo publicado:
+
+```bash
+docker exec -i social-notifications-postgres psql -U social_notifications -d social_notifications -c "SELECT status, intentos, published_at FROM outbox_event WHERE outbox_id = '00000000-0000-0000-0000-000000000001';"
+```
+
 ## Configuracion
 
 Las variables de entorno necesarias se documentan mediante `.env.example`.
