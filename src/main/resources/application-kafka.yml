@@ -1,6 +1,4 @@
 spring:
-  autoconfigure:
-    exclude: []
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/social_notifications}
     username: ${DB_USERNAME:social_notifications}
